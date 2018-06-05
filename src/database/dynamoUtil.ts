@@ -96,16 +96,22 @@ class DynamoUtil {
 	public async convertEventToDynamo(contractUtil: ContractUtil, log: ILog, sysTime: number) {
 		const block = await contractUtil.web3.eth.getBlock(Number(log.blockNumber));
 		let addr = '';
-		if (log.type === CST.EVENT_ACCEPT_PRICE ||
+		if (
 			log.type === CST.EVENT_COMMIT_PRICE ||
 			log.type === CST.EVENT_CREATE ||
 			log.type === CST.EVENT_REDEEM
-		) addr = log.eventParas['sender'];
+		)
+			addr = log.eventParas['sender'];
 		else if (log.type === CST.EVENT_TRANSFER) addr = log.eventParas['from'];
 		else if (log.type === CST.EVENT_APPROVAL) addr = log.eventParas['tokenOwner'];
 		const dbInput = {
 			[CST.DB_EVENT_KEY]: {
-				S: log.type + '|' + addr + '|' + moment.utc(block.timestamp * 1000).format('YYYY-MM-DD')
+				S:
+					log.type +
+					'|' +
+					addr +
+					'|' +
+					moment.utc(block.timestamp * 1000).format('YYYY-MM-DD')
 			},
 			[CST.DB_EVENT_TIMESTAMP_ID]: { S: block.timestamp + '|' + log.id },
 			[CST.DB_EVENT_SYSTIME]: { N: sysTime + '' },
@@ -210,7 +216,7 @@ class DynamoUtil {
 		});
 	}
 
-	public async readLastBlock(): Promise<number> {
+	public async readLastBlock(): Promise<number[]> {
 		const params = {
 			TableName: this.live ? CST.DB_AWS_STATUS_LIVE : CST.DB_AWS_STATUS_DEV,
 			KeyConditionExpression: CST.DB_ST_PROCESS + ' = :' + CST.DB_ST_PROCESS,
@@ -220,8 +226,8 @@ class DynamoUtil {
 		};
 
 		const data = await this.queryData(params);
-		if (!data.Items || !data.Items.length) return 0;
-		return Number(data.Items[0].block.N);
+		if (!data.Items || !data.Items.length) return [0, 0];
+		return [Number(data.Items[0].block.N), Number(data.Items[0].timestamp.N)];
 	}
 
 	public async readTradeData(source: string, datetimeString: string): Promise<ITrade[]> {

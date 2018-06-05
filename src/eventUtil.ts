@@ -74,8 +74,10 @@ class EventUtil {
 						await contractUtil.triggerReset();
 				}, 15000);
 			else {
-				let startBlk = await dynamoUtil.readLastBlock() || CST.INCEPTION_BLK;
-				// let startBlk = CST.INCEPTION_BLK;
+				const lastStatus = await dynamoUtil.readLastBlock();
+				// let startBlk = lastStatus[0] || CST.INCEPTION_BLK;
+				let startBlk = CST.INCEPTION_BLK;
+				let blockTimestamp = lastStatus[1] || CST.INCEPTION_TS;
 				util.log('last block number: ' + startBlk);
 				setInterval(async () => {
 					const currentBlk = await contractUtil.web3.eth.getBlockNumber();
@@ -94,14 +96,15 @@ class EventUtil {
 						Promise.all(promiseList).then(async () => {
 							await dynamoUtil.insertPublicEventData(contractUtil, allEvents);
 							const block = await contractUtil.web3.eth.getBlock(currentBlk);
-							await dynamoUtil.insertStatusData({
-								[CST.DB_ST_BLOCK]: { N: currentBlk + '' },
-								[CST.DB_ST_TS]: { N: block.timestamp + '' },
-								[CST.DB_ST_SYSTIME]: { N: util.getNowTimestamp() + '' }
-							});
+							blockTimestamp = block.timestamp;
 						}).catch(err => util.log(err));
 					}
 					startBlk = currentBlk + 1;
+					await dynamoUtil.insertStatusData({
+						[CST.DB_ST_BLOCK]: { N: currentBlk + '' },
+						[CST.DB_ST_TS]: { N: blockTimestamp * 1000 + '' },
+						[CST.DB_ST_SYSTIME]: { N: util.getNowTimestamp() + '' }
+					});
 				}, 15000);
 			}
 		else {
