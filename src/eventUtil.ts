@@ -75,8 +75,7 @@ class EventUtil {
 				}, 15000);
 			else {
 				const lastStatus = await dynamoUtil.readLastBlock();
-				// let startBlk = lastStatus[0] || CST.INCEPTION_BLK;
-				let startBlk = CST.INCEPTION_BLK;
+				let startBlk = lastStatus[0] || CST.INCEPTION_BLK;
 				let blockTimestamp = lastStatus[1] || CST.INCEPTION_TS;
 				util.log('last block number: ' + startBlk);
 				setInterval(async () => {

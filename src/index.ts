@@ -8,6 +8,7 @@ import sqlUtil from './database/sqlUtil';
 import dbUtil from './dbUtil';
 import eventUtil from './eventUtil';
 import ohlcUtil from './ohlcUtil';
+import storageUtil from './storageUtil';
 import util from './util';
 
 const tool = process.argv[2];
@@ -61,6 +62,9 @@ switch (tool) {
 	case 'hourly':
 		ohlcUtil.startProcessHour();
 		setInterval(() => dynamoUtil.insertHeartbeat(), 30000);
+		break;
+	case 'getKey':
+		util.log(storageUtil.getAWSKey());
 		break;
 	case 'node':
 		util.log('starting node hear beat');
