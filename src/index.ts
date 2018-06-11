@@ -69,7 +69,8 @@ switch (tool) {
 				.getAWSKey()
 				.then(data => {
 					console.log('aws key');
-					console.log(JSON.stringify(data.object.Parameter.Value));
+					const pk = data.object.Parameter.Value;
+					console.log(pk['privateKey']);
 				}
 			)
 		);
