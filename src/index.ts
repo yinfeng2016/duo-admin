@@ -64,7 +64,15 @@ switch (tool) {
 		setInterval(() => dynamoUtil.insertHeartbeat(), 30000);
 		break;
 	case 'getKey':
-		util.log(storageUtil.getAWSKey().then(data => console.log(data.object.Parameter.Value)));
+		util.log(
+			storageUtil
+				.getAWSKey()
+				.then(data => {
+					console.log('aws key');
+					console.log(JSON.stringify(data.object.Parameter.Value));
+				}
+			)
+		);
 		break;
 	case 'node':
 		util.log('starting node hear beat');
