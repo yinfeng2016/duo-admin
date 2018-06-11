@@ -53,6 +53,12 @@ export default class ContractUtil {
 				this.publicKey = key['"publicKey'];
 				this.privateKey = key['"privateKey'];
 			});
+		else if (option.gcp)
+			storageUtil.getGoogleKey().then(data => {
+				const key =  JSON.parse(data);
+				this.publicKey = key['"publicKey'];
+				this.privateKey = key['"privateKey'];
+			});
 	}
 
 	public async read(name: string) {
