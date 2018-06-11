@@ -66,16 +66,21 @@ switch (tool) {
 	case 'getKey':
 		if (option.aws)
 			storageUtil.getAWSKey().then(data => {
-				console.log('aws key');
+				util.log('aws key');
 				const pk = JSON.parse(data.object.Parameter.Value);
-				console.log(pk['privateKey']);
+				util.log(pk['privateKey']);
 			});
 		else if (option.azure)
 			storageUtil.getAZUREKey().then(data => {
-				console.log('azure key');
-				// const pk = JSON.parse(data.object.Parameter.Value);
+				util.log('azure key');
 				const pk =  JSON.parse(data);
-				console.log(pk['privateKey']);
+				util.log(pk['privateKey']);
+			});
+		else if (option.gcp)
+			storageUtil.getGoogleKey().then(data => {
+				util.log('google key');
+				const pk =  JSON.parse(data);
+				util.log(pk['privateKey']);
 			});
 
 		break;
