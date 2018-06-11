@@ -4,7 +4,7 @@ class StorageUtil {
 
 	public async getAWSKey() {
 		const aws = new Aws();
-		return aws.command('ssm get-parameter --name price-feed-private --with-decryption');
+		return aws.command('ssm get-parameter --name price-feed-private --region ap-southeast-1 --with-decryption');
 	}
 }
 
