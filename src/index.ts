@@ -74,7 +74,7 @@ switch (tool) {
 			storageUtil.getAZUREKey().then(data => {
 				console.log('azure key');
 				// const pk = JSON.parse(data.object.Parameter.Value);
-				console.log(data);
+				console.log(data['privateKey']);
 			});
 
 		break;
